@@ -6,7 +6,7 @@ function output = sft_func_bp_z2q(L,sum)
 %  Copyright (C) 2016 Deep ADMM NETWORK. SCU. All rights reserved.
 
 % sum  = c_n+beta_(n-1) //4096*1
-% L is the number of x
+% L is the length of q
 length = size(sum,1);%4096
 output = zeros(length,L);
 step = 2/(L-1);
