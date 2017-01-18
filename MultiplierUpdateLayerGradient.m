@@ -5,7 +5,7 @@
 %  Created by Wang Han.SCU on 22/10/16.
 %  Copyright (C) 2016 Deep ADMM NETWORK. SCU. All rights reserved.
 
-function [beta_gradient,eta_gradient] = MultiplierUpdateLayerGradient(...
+function [E2beta_gradient,E2eta_gradient] = MultiplierUpdateLayerGradient(...
         eta_n,c_n,z_n,L,x_next_gradient,x_next2beta_gradient,beta_next_gradient,...
         beta_next2beta_gradient,z_next_gradient,z_next2beta_gradient,is_N)
 
@@ -27,8 +27,8 @@ function [beta_gradient,eta_gradient] = MultiplierUpdateLayerGradient(...
     beta2beta_gradient = cell(length,1);
     beta2c_gradient = cell(length,1);
     beta2z_gradient = cell(length,1);
-    beta_gradient = cell(length,1);
-    eta_gradient = cell(length,1);
+    E2beta_gradient = cell(length,1);
+    E2eta_gradient = cell(length,1);
     I_n = {eye(length)}; %I_n is an identity matrix sized N x N
     for l = 1:L
         beta2eta_gradient{l} = c_n{l} - z_n{l};
@@ -36,11 +36,19 @@ function [beta_gradient,eta_gradient] = MultiplierUpdateLayerGradient(...
         beta2c_gradient{l} = eta_n{l} * I_n;
         beta2z_gradient{l} = -eta_n{l} * I_n;
         if (is_N)
-            beta_gradient{l} = x_next_gradient{l} * x_next2beta_gradient{l};
+            E2beta_gradient{l} = x_next_gradient{l} * x_next2beta_gradient{l};
         else
-            beta_gradient{l} = beta_next_gradient{l} * beta_next2beta_gradient{l} +...
+            E2beta_gradient{l} = beta_next_gradient{l} * beta_next2beta_gradient{l} +...
                 z_next_gradient{l} * z_next2beta_gradient{l} + x_next_gradient{l} * x_next2beta_gradient{l};
         end
-        eta_gradient{l} = beta_gradient{l} * beta2eta_gradient{l};
+        E2eta_gradient{l} = beta2eta_gradient{l}'*E2beta_gradient{l};
+        E2c_gradient{l} = beta2c_gradient{l}' *E2beta_gradient{l};
+        E2z_gradient{l} = beta2z_gradient{l}' *E2beta_gradient{l};
+        
     end
+ 
+% these gradients will be used in upcoming steps:
+E_2_c2_first = beta2_2_c2' * E_2_beta2;
+E_2_z2_second = beta2_2_z2' * E_2_beta2;
+E_2_beta1_first = beta2_2_beta1' * E_2_beta2;
 end
