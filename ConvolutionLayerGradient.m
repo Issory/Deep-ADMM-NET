@@ -5,23 +5,25 @@
 %  Created by Wang Han.SCU on 22/10/16.
 %  Copyright (C) 2016 Deep ADMM NETWORK. SCU. All rights reserved.
 
-function [c2w_gradient,c2x_gradient] = ConvolutionLayerGradient(x_n,D_n,L)
+function [E_2_w_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
     % This function is aimed to compute the gradient of convolution layer
     % output:
-    % c2w_gradient is the gradient between c(n) and w(n)
-    % c2x_gradient is the gradinet between c(n) and x(n)
+    % E_2_w_n is the gradient between E and w(n)
     % input:
-    % x_n is the value of n th reconstuction layer
+    % E_2_c_n is the gradient between E and c(n)
+    % B_m is the bais
     % D_n is a transform matrix for a filtering operation such as DWT,DCT.
     % L is the number of z in column, which has been definited before.
-    length = size(x_n,1);
-    c2w_gradient = zeros(length,1);
-    c2x_gradient = zeros(length,1);
-    B_m = zeros(size(c_n)); %B_m is a DCT basis,but I am not sure 
-    I_n = eye(size(c_n)); % I_n is an identify matrix
-    for l = 1:L
-        c2w_gradient(l) = B_m * x_n; 
-        c2x_gradient(l) = D_n(l) * I_n;
+    % M is the number of bais , which has been definited before.
+    E_2_w_n = {zeros(L,M)};
+    c_n_2_w_n= {zeros(L,M)};
+    c_n_2_x_n = {zeros(1,L)};
+    
+    for l=1:L
+        for m = 1:M
+            c_n_2_w_n{l,m} = B_m{l,m}*x_n{l};
+            E_2_w_n{l,m} = c_n_2_w_n{l,m}'* E_2_c_n{l};
+        end
+        c_n_2_x_n{l} = D_n{l};
     end
-    % tips: I am not sure whether I should use for loop
 end
