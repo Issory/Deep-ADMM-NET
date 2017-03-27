@@ -2,14 +2,14 @@
 clear,clc;
 img = imread('image2/IM-0001-0001.jpg');
 img = rgb2gray(img);
-img = imresize(img,0.125);
+img = img(256:258,256:258);
 
 %--Initialization__%
 
-P = eye(4096);
+P = eye(9);
 x =double(reshape(img,[],1));
 F = dftmtx(size(x,1));
-H = dctmtx(4096);
+H = dctmtx(9);
 H_1 = {H};
 D_1 = {H};
 A = P*F;
@@ -18,8 +18,8 @@ rho_1 = {0.00001};
 lambda = 0.01;
 rho_2 = {0.006};
 q_1 = {sft_threshold_func(10,lambda,rho_2{1})};
-beta_0 = {zeros(4096,1)};
-z_0 = {zeros(4096,1)};
+beta_0 = {zeros(9,1)};
+z_0 = {zeros(9,1)};
 eta_1 = {0.01};
 
 %---First Layer---
