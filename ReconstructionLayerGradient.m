@@ -11,9 +11,9 @@ function [E_2_gamma_n,E_2_rho_n,E_2_beta_nMinus1,E_2_z_nMinus1] = ...
 % This function is aim to calculate the beta in the Reconstruction Layer
 
 % output:
-% E_2_gamma_n is the gradient between cost E and ¦Ã(n-1)
-% E_2_rho_n is the gradient between cost E and ¦Ñ(n-1)
-% E_2_beta_nMinus1 is the gradient between cost E and ¦Â(n-1)
+% E_2_gamma_n is the gradient between cost E and Î³(n-1)
+% E_2_rho_n is the gradient between cost E and Ï(n-1)
+% E_2_beta_nMinus1 is the gradient between cost E and Î²(n-1)
 % E_2_z_nMinus1 is the gradient between cost E and z(n-1)
 
 % input:
@@ -25,7 +25,7 @@ function [E_2_gamma_n,E_2_rho_n,E_2_beta_nMinus1,E_2_z_nMinus1] = ...
 % B_m is the bais 
 % rho_n is the learnable parameter
 % Z_n_Minus_1 is n-1 layer of z
-% beta_n_Minus_1 is n-1 layer of ¦Â
+% beta_n_Minus_1 is n-1 layer of Î²
 % L is the amount of layer, which has been definited before.
 % M is the amount of bais, which has been definited before.
 
@@ -52,15 +52,14 @@ Q = (P'*P+tmp1)^(-1);
 for l = 1:L
     for m = 1:M
         x_n_2_gamma_n{l,m} = -rho_n{l}*F'*(Q^2*(F*B_m{l,m}'*H_n{l}*F'+F*H_n{l}'*B_m{l,m}*F')...
-            *(P'*y+tmp2)*(Z_n_Minus_1{l}-beta_n_Minus_1{l})...
-            -Q*F*B_m{l,m}'*(Z_n_Minus_1{l}-beta_n_Minus_1{l}));
+            *(P'*y+tmp2)-Q*F*B_m{l,m}'*(Z_n_Minus_1{l}-beta_n_Minus_1{l}));
         E_2_gamma_n{l,m} = x_n_2_gamma_n{l,m}' * E_2_x_n{l};
     end
     x_n_2_rho_n{l} = -F'*(Q^2*(F*H_n{l}'*H_n{l}*F')...
         *(P'*y+tmp2)-Q*F*H_n{l}'*(Z_n_Minus_1{l}-beta_n_Minus_1{l}));
     E_2_rho_n{l} = x_n_2_rho_n{l}' * E_2_x_n{l};
-    x_n_2_beta_nMinus1{l} = -rho_n{l}*F'*Q*H_n(l)';
+    x_n_2_beta_nMinus1{l} = -rho_n{l}*F'*Q*H_n{l}';
     E_2_beta_nMinus1{l} = x_n_2_beta_nMinus1{l}' * E_2_x_n{l};
-    x_n_2_zMinus1{l} = rho_n(l)*F'*Q*H_n(l)';
+    x_n_2_zMinus1{l} = rho_n{l}*F'*Q*H_n{l}';
     E_2_z_nMinus1{l} = x_n_2_zMinus1{l}'* E_2_x_n{l};
 end
