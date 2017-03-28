@@ -58,8 +58,8 @@ fprintf('BP Convolution Layer2\n');
 tic;
 % E gradient
 E_2_c_2 = {cell2mat(E_2_c_2_first)+ cell2mat(E_2_c_2_second)};
-% function [E_2_w_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
-E_2_w_2 = ConvolutionLayerGradient(E_2_c_2,B_2,D_2,1,1,x_2);
+% function [E_2_w_n,c_n_2_x_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
+[E_2_w_2,c_2_2_x_2] = ConvolutionLayerGradient(E_2_c_2,B_2,D_2,1,1,x_2);
 toc;
 % BP Convolution Layer 2 END-----
 
@@ -70,7 +70,7 @@ tic;
 E_2_x_2 = {cell2mat(c_2_2_x_2) * cell2mat(E_2_c_2)};
 % function [E_2_gamma_n,E_2_rho_n,E_2_beta_nMinus1,E_2_z_nMinus1] = ReconstructionLayerGradient(E_2_x_n,P,F,y,H_n,B_m,rho_n,Z_n_Minus_1,beta_n_Minus_1,L,M)
 % output gradient
-[E_2_gamma_2,E_2_rho_2,E_2_beta_1,E_2_z_1] = ReconstructionLayerGradient(E_2_x_2,P,F,y,H_2,B_2,rho_2,z_1,beta_1,1,3);
+[E_2_gamma_2,E_2_rho_2,E_2_beta_1,E_2_z_1] = ReconstructionLayerGradient(E_2_x_2,P,F,y,H_2,B_2,rho_2,z_1,beta_1,1,1);
 toc;
 % BP Reconstruction Layer2 END-----
 
