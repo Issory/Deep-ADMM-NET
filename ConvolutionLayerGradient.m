@@ -5,7 +5,7 @@
 %  Created by Wang Han.SCU on 22/10/16.
 %  Copyright (C) 2016 Deep ADMM NETWORK. SCU. All rights reserved.
 
-function [E_2_w_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
+function [E_2_w_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M,x_n)
     % This function is aimed to compute the gradient of convolution layer
     % output:
     % E_2_w_n is the gradient between E and w(n)
@@ -21,7 +21,7 @@ function [E_2_w_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
     
     for l=1:L
         for m = 1:M
-            c_n_2_w_n{l,m} = B_m{l,m}*x_n{l};
+            c_n_2_w_n{l,m} = B_m{l,m}*x_n;
             E_2_w_n{l,m} = c_n_2_w_n{l,m}'* E_2_c_n{l};
         end
         c_n_2_x_n{l} = D_n{l};

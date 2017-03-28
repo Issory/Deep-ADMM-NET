@@ -30,7 +30,7 @@ function [E_2_q_n,E_2_beta_nMinus1,E_2_c_n] = NonlinearTransformLayerGradient(E_
     % tips: maybe have some problems
     for l = 1:L
         z_n_2_q_n{l}= sft_func_bp_z2q(size(q{l},2),c_n{1}+beta_nMinus1{1});
-        z_n_2_beta_nMinus1{l} = sft_func_bp_z2beta(size(q{l},2),c_n{1}+beta_nMinus1{1},q{l});
+        z_n_2_beta_nMinus1{l} = sft_func_bp_z2beta(size(c_n{l},1),c_n{1}+beta_nMinus1{1},q{l});
         z_n_2_c_n{l} = z_n_2_beta_nMinus1{l};
 
         % these gradients can be used directly

@@ -59,7 +59,7 @@ tic;
 % E gradient
 E_2_c_2 = {cell2mat(E_2_c_2_first)+ cell2mat(E_2_c_2_second)};
 % function [E_2_w_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
-E_2_w_2 = ConvolutionLayerGradient(E_2_c_2,B_2,D_2,1,3);
+E_2_w_2 = ConvolutionLayerGradient(E_2_c_2,B_2,D_2,1,1,x_2);
 toc;
 % BP Convolution Layer 2 END-----
 
