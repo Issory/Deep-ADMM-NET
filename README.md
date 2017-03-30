@@ -11,7 +11,7 @@ Copyright (C) 2016 Deep ADMM NETWORK. SCU. All rights reserved.
 
 # About Code
 
-特声明，本代码是针对论文`Heran Yang, Jian Sun*, Huibin Li, Lisheng Wang, Zongben Xu.  Deep Fusion Net for Multi-Atlas Segmentation: Application to Cardiac MR Images (Oral presentation), International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI), Accepted, 2016` 研究思路的复现，与原作者代码实现无关，如对原作者研究感兴趣，可参照原作者论文链接[http://gr.xjtu.edu.cn/web/jiansun/4](http://gr.xjtu.edu.cn/web/jiansun/4)
+特声明，本代码是针对论文`Yan Yang, Jian Sun*, Huibin Li, Zongben Xu.  Deep ADMM-Net for Compressive Sensing MRI, Advances in Neural Information Processing Systems (NIPS), Accepted, 2016` 研究思路的复现，与原作者代码实现无关，如对原作者研究感兴趣，可参照原作者论文链接[http://gr.xjtu.edu.cn/web/jiansun/4](http://gr.xjtu.edu.cn/web/jiansun/4)
 
 # Image source
 `DICOM Image Library`：
