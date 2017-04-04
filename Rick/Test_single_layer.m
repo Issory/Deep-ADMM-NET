@@ -1,6 +1,6 @@
 %--load image__%
 clear,clc;
-img = imread('image2/IM-0001-0001.jpg');
+img = imread('IM-0001-0001.jpg');
 img = rgb2gray(img);
 img = img(256:258,256:258);
 
