@@ -44,12 +44,12 @@ params.rho = cell(n,1);
 params.eta = cell(n,1);
 
 for i = 1:n
-   params.rho(i,1) = {0.00001};
+   params.rho(i,1) = {0.001};
    params.q(i,1) = {sft_threshold_func(10,lambda,params.rho{i,1})};
    params.D(i,1) = {dctmtx(vec_len)};
    params.H(i,1) = {dctmtx(vec_len)};
-   params.B(i,1) = {dctmtx(vec_len)};
    params.eta(i,1) = {0.01};
+   
 end
 end
 
@@ -65,7 +65,7 @@ for i = 1:n
     net.beta(i,1) = {zeros(vec_len,1)};
     net.c(i,1) = {zeros(vec_len,1)};
     net.z(i,1) = {zeros(vec_len,1)};
-    net.x(i,1) = {reshape(image,[],1)};
+    net.x(i,1) = {zeros(vec_len,1)};%{reshape(image,[],1)};
 end
 
 end
