@@ -3,7 +3,7 @@ function [ constants,params,net ] = Init( image,n )
 %   n
 constants = Init_constants(image);
 params = Init_params(image,n);
-net = Init_net(image,n);
+
 
 
 end
@@ -59,10 +59,7 @@ net.c = cell(n,1);
 net.z = cell(n,1);
 net.x = cell(n,1);
 for i = 1:n
-    net.beta(i,1) = {zeros(vec_len,1)};
-    net.c(i,1) = {zeros(vec_len,1)};
-    net.z(i,1) = {zeros(vec_len,1)};
-    net.x = reshape(image,[],1);
+    
 end
 
 end
