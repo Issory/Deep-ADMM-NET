@@ -1,9 +1,10 @@
-function [ constants,params,net ] = Init( image,n )
-%INIT 
-%   n
+function [ constants,params,net ] = Init( image,N )
+%INIT 初始化函数
+%   输入：image图片、N层数(初始化时要多放一层，第一层作为初始值层)
+%   输出：constants常量、params待更新变量、net网络
 constants = Init_constants(image);
-params = Init_params(image,n);
-net = Init_net(image,n);
+params = Init_params(image,N+1);
+net = Init_net(image,N+1);
 
 
 end
@@ -38,14 +39,16 @@ lambda = 0.01;
 params.q = cell(n,1);
 params.D = cell(n,1);
 params.H = cell(n,1);
+params.B = cell(n,1);
 params.rho = cell(n,1);
 params.eta = cell(n,1);
 
 for i = 1:n
-   params.rho(i,1) = {0.01};
+   params.rho(i,1) = {0.00001};
    params.q(i,1) = {sft_threshold_func(10,lambda,params.rho{i,1})};
    params.D(i,1) = {dctmtx(vec_len)};
    params.H(i,1) = {dctmtx(vec_len)};
+   params.B(i,1) = {dctmtx(vec_len)};
    params.eta(i,1) = {0.01};
 end
 end
@@ -62,7 +65,7 @@ for i = 1:n
     net.beta(i,1) = {zeros(vec_len,1)};
     net.c(i,1) = {zeros(vec_len,1)};
     net.z(i,1) = {zeros(vec_len,1)};
-    net.x = reshape(image,[],1);
+    net.x(i,1) = {reshape(image,[],1)};
 end
 
 end

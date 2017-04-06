@@ -1,14 +1,12 @@
 function [ x_output,net_forwarded ] = Forward( N,constants,params,net)
-% Authored by Rick~
-%FORWARD 前向传播函数
+%FORWARD
 %input:
-%   N
-%   constants
+%   n
 %   params
 %   net
 %output:
 %   x_output
-%   net_forwarded
+%   units
 
 % Constants
 F = constants.F;
@@ -21,38 +19,33 @@ rho = params.rho;
 eta = params.eta;
 q = params.q;
 
-for i = 1:N-1
+for i = 1:N
     % ReconstructionLayer
     fprintf('ReconstructionLayer %d\n',i);
     tic;
     %x_1 = ReconstructionLayer(F,P,H_1,beta_0,y,rho_1,z_0);
-    net.x(i+1,1) = {ReconstructionLayer(F,P,H(i+1,1),net.beta(i,1)...
-            ,y,rho(i+1,1),net.z(i,1))};
+    net.x(i,1) = ReconstructionLayer(F,P,H(i,1),net.beta(i,1)...
+            ,y,rho(i,1),net.z(i,1));
     toc;
     
     % ConvolutionLayer
     fprintf('ConvolutionLayer %d\n',i);
     tic;
     %c_1 = ConvolutionLayer(x_1,D_1);
-    net.c(i+1,1) = ConvolutionLayer(net.x(i+1,1),D(i+1,1));
+    net.c(i,1) = ConvolutionLayer(net.x(i,1),D(i,1));
     toc;
     
     % NonlinearTransformLayer
     fprintf('NonlinearTransformLayer %d\n',i);
     tic;
     %z_1 = NonlinearTransformLayer(c_1,beta_0,q_1);
-    net.z(i+1,1) = NonlinearTransformLayer(net.c(i+1,1),net.beta(i,1),q(i+1,1));
+    net.z(i,1) = NonlinearTransformLayer(net.c(i,1),net.beta(i,1),q_1);
     toc;
     
     % MultiplierUpdateLayer
     fprintf('MultiplierUpdateLayer %d\n',i);
     tic;
     %beta_1 = MultiplierUpdateLayer(beta_0,eta_1,c_1,z_1);
-    net.beta(i+1,1) = MultiplierUpdateLayer(net.beta(i,1),eta(i+1,1),...
-        net.c(i+1,1),net.z(i+1,1));
     toc;
-end
-net_forwarded = net;
-x_output = net.x(N,1);
 end
 

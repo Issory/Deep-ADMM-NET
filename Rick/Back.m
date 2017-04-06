@@ -1,7 +1,15 @@
-function [ output_args ] = Back( input_args )
-%BACK 此处显示有关此函数的摘要
-%   此处显示详细说明
+function [ E,grad ] = Back( constants,params,net)
+% Authored by Rick~
+%BACK 鍙嶅悜浼犳挱鍑芥暟
+%   杈撳叆input:
+%   constants
+%   params
+%   net
 
+%   杈撳嚭output:
+%   E
+%   grad
+N = size(net.x,1);
 
 end
 

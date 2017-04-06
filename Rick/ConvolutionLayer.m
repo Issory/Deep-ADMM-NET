@@ -14,7 +14,7 @@ function c_n = ConvolutionLayer(x_n,D_n)
 L = size(D_n,2);
 c_n = cell(L,1);
 for l = 1:L
-    c_n{l} = D_n{l}*x_n;
+    c_n{l} = D_n{l}*cell2mat(x_n);
 end
 
 %Tips: This function is likely to be rewrite using matrix multiplication
