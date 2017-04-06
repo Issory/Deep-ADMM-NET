@@ -39,7 +39,7 @@ grad.x_grad(N,1) = {(cell2mat(net.x(N,1))-x_gt)/...
     (norm(x_gt)*norm((cell2mat(net.x(N,1))-x_gt)))};
 
 
-for i = N-1:-1:2 %4（3，2，1）《3》
+for i = N-1:-1:2 %4�?�?�?）�?3�?
 fprintf('BP Reconstruction Layer %d\n',i);
 tic;
 % E gradient
@@ -52,7 +52,7 @@ if i==N-1
     grad.gamma_beta(i,1) = E_2_beta_nMinus1_first;
 else
     grad.gamma_beta(i,1) = {cell2mat(E_2_beta_nMinus1_first) + ...
-        cell2mat(E_2_beta_nMinus1_second) +cell2mat(E_2_beta_nMinus1_second)};
+        cell2mat(E_2_beta_nMinus1_second) + cell2mat(E_2_beta_nMinus1_third)};
 end
 
 %---Second Layer-------------------------
@@ -66,7 +66,7 @@ toc;
 % BP MultiplierUpdate Layer 2 END-----
 
 % BP Nonlinear Transform Layer 2-----
-fprintf('BP NonlinearTransform Layer2\n');
+fprintf('BP NonlinearTransform Layer2 %d\n',i-1);
 tic;
 % E gradient
 grad.z_grad(i,1) = {cell2mat(E_2_z_n_first) + cell2mat(E_2_z_second)};
@@ -78,17 +78,17 @@ toc;
 % BP Nonlinear Transform Layer 2 END-----
 
 % BP Convolution Layer 2-----
-fprintf('BP Convolution Layer2\n');
+fprintf('BP Convolution Layer %d\n',i-1);
 tic;
 % E gradient
 grad.c_grad(i,1) = {cell2mat(E_2_c_n_first)+ cell2mat(E_2_c_n_second)};
 % function [E_2_w_n,c_n_2_x_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
-[grad.w_grad(i,1),c_n_2_x_n] = ConvolutionLayerGradient(grad.c_grad(i,1),B(i,1),D(i,1),1,1,net.x(i,1));
+[grad.w_grad(i,1),c_n_2_x_n] = ConvolutionLayerGradient(grad.c_grad(i,1),B(i,1),D(i,1),1,1,net.x{i,1});
 toc;
 % BP Convolution Layer 2 END-----
 toc;
 
-grad.x_grad(i,1) = {cell2mat(c_n_2_x_n) * cell2mat(E_2_c_2)};
+grad.x_grad(i,1) = {cell2mat(c_n_2_x_n) * cell2mat(grad.c_grad(i,1))};
 
 end
 
@@ -104,7 +104,7 @@ function [B,w] = Init_temp_params(N,net)
     end
 end
 
-%初始化梯度
+%初始化梯�?
 function init_grad = Init_grad(N,net)
 vec_size = size(net.x(1,1),1);
 
