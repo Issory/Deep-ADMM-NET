@@ -11,3 +11,4 @@ N = 10;
 [ E,grad ] = Back( img,constants,params,net);
 
 unrollGrad=UnrollGradient(grad);
+rollGrad=RollGradient(unrollGrad,grad);
