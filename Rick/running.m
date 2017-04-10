@@ -9,3 +9,5 @@ N = 10;
 [constants,params,net]  = Init( img,N );
 [ x_output,net_forwarded ] = Forward( N,constants,params,net);
 [ E,grad ] = Back( img,constants,params,net);
+
+unrollGrad=UnrollGradient(grad);
