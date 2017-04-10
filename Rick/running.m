@@ -11,4 +11,6 @@ N = 10;
 [ E,grad ] = Back( img,constants,params,net);
 
 unrollGrad=UnrollGradient(grad);
+options = struct('GradObj','on','Display','iter','LargeScale','off','HessUpdate','lbfgs','InitialHessType','identity','GoalsExactAchieve',0);
+[x2,fval2] = fminlbfgs(@myfun,x0,options);
 rollGrad=RollGradient(unrollGrad,grad);
