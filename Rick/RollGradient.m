@@ -98,12 +98,12 @@ end
 roll_grad.c_grad=unroll_c_grad;
 
 % roll.grad.gamma_beta
-unroll_gamma_beta=cell(size(grad.gamma_beta,1),1);
-for i=1:size(grad.gamma_beta,1)
-        length=size(grad.gamma_beta{i},1);
-        unroll_gamma_beta{i}=unroll_grad(index:index+length-1);
-        index=index+length;
-end
-roll_grad.gamma_beta=unroll_gamma_beta;
+%unroll_gamma_beta=cell(size(grad.gamma_beta,1),1);
+%for i=1:size(grad.gamma_beta,1)
+%        length=size(grad.gamma_beta{i},1);
+%        unroll_gamma_beta{i}=unroll_grad(index:index+length-1);
+%        index=index+length;
+%end
+%roll_grad.gamma_beta=unroll_gamma_beta;
 
 end

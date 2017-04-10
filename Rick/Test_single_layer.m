@@ -32,7 +32,7 @@ toc;
 % ConvolutionLayer
 fprintf('ConvolutionLayer\n');
 tic;
-c_1 = ConvolutionLayer(x_1,D_1);
+c_1 = ConvolutionLayer({x_1},D_1);
 toc;
 % NonlinearTransformLayer
 fprintf('NonlinearTransformLayer\n');
@@ -59,7 +59,7 @@ toc;
 % ConvolutionLayer2
 fprintf('ConvolutionLayer2\n');
 tic;
-c_2 = ConvolutionLayer(x_2,D_2);
+c_2 = ConvolutionLayer({x_2},D_2);
 toc;
 % NonlinearTransformLayer2
 fprintf('NonlinearTransformLayer2\n');

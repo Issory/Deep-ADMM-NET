@@ -1,4 +1,4 @@
-function [ E,grad ] = Back( img,constants,params,net)
+function [ E,grad ] = Back( img,constants,params,init_grad,net)
 % Authored by Rick~
 %BACK 反向传播函数
 %   输入input:
@@ -10,7 +10,7 @@ function [ E,grad ] = Back( img,constants,params,net)
 %   输出output:
 %   E
 %   grad
-N = size(net.x,1);
+N = size(net.x,1)-1;
 
 % Constants
 F = constants.F;
@@ -24,8 +24,8 @@ eta = params.eta;
 q = params.q;
 
 x_gt = double(reshape(img,[],1));
+grad = init_grad;
 E = norm(cell2mat(net.x(N,1))-x_gt)/norm(x_gt);
-grad = Init_grad(N,net);
 [B,w] = Init_temp_params(N,net);
 
 
@@ -39,7 +39,7 @@ grad.x_grad(N,1) = {(cell2mat(net.x(N,1))-x_gt)/...
     (norm(x_gt)*norm((cell2mat(net.x(N,1))-x_gt)))};
 
 
-for i = N-1:-1:2 %4�?�?�?）�?3�?
+for i = N-1:-1:2 
 fprintf('BP Reconstruction Layer %d\n',i);
 tic;
 % E gradient
@@ -49,9 +49,9 @@ tic;
     ReconstructionLayerGradient(grad.x_grad(N,1),...
     P,F,y,H(i+1,1),B(i+1,1),rho(i+1,1),net.z(i,1),net.beta(i,1),L,M);
 if i==N-1
-    grad.gamma_beta(i,1) = E_2_beta_nMinus1_first;
+    grad.beta_grad(i,1) = E_2_beta_nMinus1_first;
 else
-    grad.gamma_beta(i,1) = {cell2mat(E_2_beta_nMinus1_first) + ...
+    grad.beta_grad(i,1) = {cell2mat(E_2_beta_nMinus1_first) + ...
         cell2mat(E_2_beta_nMinus1_second) + cell2mat(E_2_beta_nMinus1_third)};
 end
 
@@ -61,7 +61,7 @@ fprintf('BP MultiplierUpdate Layer %d\n',i-1);
 tic;
 % function [E_2_eta_n,E_2_beta_nMinus1,E_2_c_n,E_2_z_n] = MultiplierUpdateLayerGradient(E_2_beta_n,c_n,z_n,eta_n,L)
 [grad.eta_grad(i,1),E_2_beta_nMinus1_second,E_2_c_n_first,E_2_z_second] = ...
-    MultiplierUpdateLayerGradient(grad.gamma_beta(i,1),net.c(i,1),net.z(i,1),eta(i,1),1);
+    MultiplierUpdateLayerGradient(grad.beta_grad(i,1),net.c(i,1),net.z(i,1),eta(i,1),1);
 toc;
 % BP MultiplierUpdate Layer 2 END-----
 
@@ -92,6 +92,8 @@ grad.x_grad(i,1) = {cell2mat(c_n_2_x_n) * cell2mat(grad.c_grad(i,1))};
 
 end
 
+%grad = real(UnrollGradient(grad));
+grad = cell2mat(grad.rho_grad);
 end
 
 function [B,w] = Init_temp_params(N,net)
@@ -104,33 +106,3 @@ function [B,w] = Init_temp_params(N,net)
     end
 end
 
-%初始化梯�?
-function init_grad = Init_grad(N,net)
-vec_size = size(net.x(1,1),1);
-
-
-init_grad = struct;
-init_grad.gamma_grad = cell(N,1);
-init_grad.eta_grad = cell(N,1);
-init_grad.rho_grad = cell(N,1);
-init_grad.q_grad = cell(N,1);
-init_grad.w_grad = cell(N,1);
-
-init_grad.x_grad = cell(N,1);
-init_grad.z_grad = cell(N,1);
-init_grad.beta_grad = cell(N,1);
-init_grad.c_grad = cell(N,1);
-
-for i = 1:N
-    init_grad.gamma_grad(i,1) = {0};
-    init_grad.eta_grad(i,1) = {0};
-    init_grad.rho_grad(i,1) = {0};
-    init_grad.q_grad(i,1) = {zeros(10,1)};
-    init_grad.w_grad(i,1) = {0};
-
-    init_grad.x_grad(i,1) = {zeros(vec_size,1)};
-    init_grad.z_grad(i,1) = {zeros(vec_size,1)};
-    init_grad.beta_grad(i,1) = {zeros(vec_size,1)};
-    init_grad.c_grad(i,1) = {zeros(vec_size,1)};
-end
-end

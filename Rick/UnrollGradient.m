@@ -69,11 +69,11 @@ for i=1:size(roll_grad.c_grad,1)
 end
 
 % roll.grad.gamma_beta
-unroll_gamma_beta=[];
-for i=1:size(roll_grad.gamma_beta,1)
-        unroll_gamma_beta=[unroll_gamma_beta;roll_grad.gamma_beta{i}(:)];
-end
+%unroll_gamma_beta=[];
+%for i=1:size(roll_grad.gamma_beta,1)
+%        unroll_gamma_beta=[unroll_gamma_beta;roll_grad.gamma_beta{i}(:)];
+%end
 
-unroll_grad=[unroll_gamma_grad;unroll_eta_grad;unroll_rho_grad;unroll_q_grad;unroll_w_grad;unroll_x_grad;unroll_z_grad;unroll_beta_grad;unroll_c_grad;unroll_gamma_beta];
+unroll_grad=[unroll_gamma_grad;unroll_eta_grad;unroll_rho_grad;unroll_q_grad;unroll_w_grad;unroll_x_grad;unroll_z_grad;unroll_beta_grad;unroll_c_grad];%unroll_gamma_beta];
 end
 
