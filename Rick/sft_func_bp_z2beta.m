@@ -9,14 +9,15 @@ function output = sft_func_bp_z2beta(L,sum,q)
 % L is the number of x
 output = zeros(1,L);
 step = 2/(L-1);
-p = zeros(1,L);
-for i = 1:L
+L_q = size(q,2);
+p = zeros(1,L_q);
+for i = 1:L_q
   p(i) = -1+(i-1)*step; %get the x axis
 end
 length = size(sum,1);%Image vector size
 for j = 1:length
 for i = 1:length
-    if sum(j)<=p(1) || sum(j)>=p(L)
+    if sum(j)<=p(1) || sum(j)>=p(L_q)
         output(j,i)=1;
     else
         %inx = find(sum(j),q);

@@ -66,7 +66,7 @@ toc;
 % BP MultiplierUpdate Layer 2 END-----
 
 % BP Nonlinear Transform Layer 2-----
-fprintf('BP NonlinearTransform Layer2 %d\n',i-1);
+fprintf('BP NonlinearTransform Layer %d\n',i-1);
 tic;
 % E gradient
 grad.z_grad(i,1) = {cell2mat(E_2_z_n_first) + cell2mat(E_2_z_second)};
