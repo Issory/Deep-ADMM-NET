@@ -22,6 +22,9 @@ for i = 1:length
     else
         %inx = find(sum(j),q);
         inx = real(floor((sum(j)-p(1))/(p(2)-p(1))));
+        if inx==0
+            inx =1;
+        end
         output(j,i) = 1-(q(inx+1)-q(inx))/(p(2)-p(1));
     end
 end

@@ -1,4 +1,4 @@
-function [ E,grad ] = Back( img,constants,params,init_grad,net)
+function [ E,grad_opt ] = Back_opt( grad_opt_unroll,img,constants,params,init_grad,net)
 % Authored by Rick~
 %BACK 
 %   input:
@@ -24,11 +24,13 @@ eta = params.eta;
 q = params.q;
 
 x_gt = double(reshape(img,[],1));
+init_grad_opt = RollGradient(grad_opt_unroll,init_grad);
+grad_opt = init_grad_opt;
 grad = init_grad;
 E = norm(cell2mat(net.x(N,1))-x_gt)/norm(x_gt);
 [B,w] = Init_temp_params(N,net);
 
-
+options = struct('GradObj','on','Display','iter','LargeScale','off','HessUpdate','lbfgs','InitialHessType','identity','GoalsExactAchieve',0);
 
 L = 1;
 M =1;
@@ -45,9 +47,14 @@ tic;
 % E gradient
 % function [E_2_gamma_n,E_2_rho_n,E_2_beta_nMinus1,E_2_z_nMinus1] = ...
 % ReconstructionLayerGradient(E_2_x_n,P,F,y,H_n,B_m,rho_n,Z_n_Minus_1,beta_n_Minus_1,L,M)
-[grad.gamma_grad(i+1,1),grad.rho_grad(i+1,1),E_2_beta_nMinus1_first,E_2_z_n_first]=...
+[grad_opt.gamma_grad(i+1,1),grad_opt.rho_grad(i+1,1),E_2_beta_nMinus1_first,E_2_z_n_first]=...
     ReconstructionLayerGradient(grad.x_grad(N,1),...
     P,F,y,H(i+1,1),B(i+1,1),rho(i+1,1),net.z(i,1),net.beta(i,1),L,M);
+
+%---
+%[new_grad,cost] = fminunc( @(p)opt_rho(E,grad,i+1),real(grad.rho_grad{i+1,1}),options);
+%---
+
 if i==N-1
     grad.beta_grad(i,1) = E_2_beta_nMinus1_first;
 else
@@ -60,7 +67,7 @@ end
 fprintf('BP MultiplierUpdate Layer %d\n',i-1);
 tic;
 % function [E_2_eta_n,E_2_beta_nMinus1,E_2_c_n,E_2_z_n] = MultiplierUpdateLayerGradient(E_2_beta_n,c_n,z_n,eta_n,L)
-[grad.eta_grad(i,1),E_2_beta_nMinus1_second,E_2_c_n_first,E_2_z_second] = ...
+[grad_opt.eta_grad(i,1),E_2_beta_nMinus1_second,E_2_c_n_first,E_2_z_second] = ...
     MultiplierUpdateLayerGradient(grad.beta_grad(i,1),net.c(i,1),net.z(i,1),eta(i,1),1);
 toc;
 % BP MultiplierUpdate Layer END-----
@@ -72,7 +79,7 @@ tic;
 grad.z_grad(i,1) = {cell2mat(E_2_z_n_first) + cell2mat(E_2_z_second)};
 % use function to compute
 % [E_2_q_n,E_2_beta_nMinus1,E_2_c_n] =  NonlinearTransformLayerGradient(E_2_z_n,c_n,beta_nMinus1,q,L)
-[grad.q_grad(i,1),E_2_beta_nMinus1_third,E_2_c_n_second]= NonlinearTransformLayerGradient...
+[grad_opt.q_grad(i,1),E_2_beta_nMinus1_third,E_2_c_n_second]= NonlinearTransformLayerGradient...
     (grad.z_grad(i,1),net.c(i,1),net.beta(i-1,1),q(i,1),1);
 toc;
 % BP Nonlinear Transform Layer END-----
@@ -83,7 +90,7 @@ tic;
 % E gradient
 grad.c_grad(i,1) = {cell2mat(E_2_c_n_first)+ cell2mat(E_2_c_n_second)};
 % function [E_2_w_n,c_n_2_x_n] = ConvolutionLayerGradient(E_2_c_n,B_m,D_n,L,M)
-[grad.w_grad(i,1),c_n_2_x_n] = ConvolutionLayerGradient(grad.c_grad(i,1),B(i,1),D(i,1),1,1,net.x{i,1});
+[grad_opt.w_grad(i,1),c_n_2_x_n] = ConvolutionLayerGradient(grad.c_grad(i,1),B(i,1),D(i,1),1,1,net.x{i,1});
 toc;
 % BP Convolution LayerEND-----
 toc;
@@ -92,7 +99,7 @@ grad.x_grad(i,1) = {cell2mat(c_n_2_x_n) * cell2mat(grad.c_grad(i,1))};
 
 end
 
-%grad = real(UnrollGradient(grad));
+grad_opt = real(UnrollGradient(grad_opt));
 
 end
 
@@ -106,3 +113,12 @@ function [B,w] = Init_temp_params(N,net)
     end
 end
 
+%---------------- for opt function---
+function [E_output,grad_gamma] = opt_gamma(E,grad,i)
+    E_output = E;
+    grad_gamma = grad.gamma_grad(i,1);
+end
+function [E_output,grad_rho] = opt_rho(E,grad,i)
+    E_output = E;
+    grad_rho = real(grad.rho_grad{i,1});
+end
